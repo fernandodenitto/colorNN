@@ -6,7 +6,7 @@ function plot2spectra (spectra1,spectra2,wavelength)
     xlabel('Wavelength of Visible Spectra')
     xlabel('Wavelength of Visible Spectra (nm)')
     ylabel('% of Reflection (normalization)')
-    legend('Master','Interpolated Master')
+    legend('Master','Copy')
     
 
 end

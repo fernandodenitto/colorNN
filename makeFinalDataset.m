@@ -1,4 +1,6 @@
 addpath(genpath('optprop'));
+addpath(genpath('plotFunctions'));
+addpath(genpath('interpolation'));
 load IS_dataset.mat
 
 %IMPOSTO LA LUNGHEZZA D'ONDA DELLO SPETTRO CHE CI SARA' SEMPRE UTILE
