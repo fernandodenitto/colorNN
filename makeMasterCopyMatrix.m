@@ -3,8 +3,8 @@
 % varibili globali definite all'inizio e bisogna chiamarlo una volta
 % caricato il dataset altrimenti non trova le variabili
 
-numCopy=5;
-masterMatrix=spectra;
+numCopy=10;
+masterMatrix=spectraReducted;
 numSamples=size(masterMatrix,2);
 
 
@@ -20,7 +20,7 @@ masterCopy=zeros(size(masterMatrix,1)*2,numSamples*numCopy);
 
 for i=1:numSamples
     for j=1:numCopy
-        masterCopy(1:421,(j-1)*numSamples+i)=spectra(:,i);
+        masterCopy(1:421,(j-1)*numSamples+i)=masterMatrix(:,i);
     end
 end
 
@@ -42,7 +42,7 @@ rng(11);
 
 for i=1:size(masterMatrix,2)
     
-    spectrum=spectra(1:421,i);
+    spectrum=masterMatrix(1:421,i);
     
     for j=1:numCopy
         noise = random ('unif ' ,1 ,1.14);

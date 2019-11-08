@@ -1,5 +1,5 @@
-%   Funzione per tracciare il grafico di uno spettro e il grafico dello
-%   spettro con caratteristiche aggregate
+%   FUNZIONE PER TRACCIARE IL GRAFICO DI UNO SPETTRO E LE RELATIVE FEATURES
+%   PER OGNI INTERVALLO
 
 function plotFeatures(spectra,numIntervals,wavelength)
 
@@ -9,20 +9,25 @@ function plotFeatures(spectra,numIntervals,wavelength)
     %Traccia il grafico dello spettro aggregato
     xSplit=xAxisAggregate(wavelength,numIntervals);
 
-    %estraggo le caratteristiche dello spettro ricordando che il risultato
-    %della funzione restituisce una matrice che ha un numero di colonne
-    %pari al numero di intervalli e come righe le rispettive features nello
-    %stesso ordine di come sono state implementate
-    aggSpectra=reduceVectorByFeatures(spectra,numIntervals);
-
-    intervalLength=round(length(wavelength)/numIntervals);
     
+    %PRENDO LE 5 CARATTERISTICHE DELLO SPETTRO
+    aggSpectra=reduceVectorByFeatures(spectra,numIntervals);
+    
+    %METTO LE CARATTERISTICHE IN RIGA CIOÉ LA PRIMA RIGA CONTIENE LA MEDIA
+    %LA SECONDA LA MEDIANA E COSI VIA. CI SARANNO numIntervals COLONNE
+    %PER OGNI RIGA CONTENENTI IL VALORE DELLA FEATURE CORRISPONDERE PER
+    %OGNI INTERVALLO I-ESIMO NELLA RIGA I-ESIMA
+    aggSpectra=reshape(aggSpectra,[5,numIntervals]);
+    
+    
+    %A QUESTO PUNTO PER CREARE I VETTORI DELLE CARATTERISTICHE BASTA
+    %ASSEGNARE LE RIGHE DEL VETTORE aggSpectra SEGUENDO L'ORDINE
+    %SPECIFICATO NEL PROGETTO
     meanVector=aggSpectra(1,:);
     medianVector=aggSpectra(2,:);
     maxVector=aggSpectra(3,:);
     minVector=aggSpectra(4,:);
     varianceVector=aggSpectra(5,:);
-    stdVector=aggSpectra(5,:);
    
     plot(xSplit,meanVector,'r *');
     plot(xSplit,medianVector,'g o');
