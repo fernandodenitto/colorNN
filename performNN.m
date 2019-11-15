@@ -8,8 +8,8 @@ function performance = performNN(nn_input, target, train_fun,  hiddenLayerSize)
 %   nn_input - input data
 %   target - target data.
 
-x = nn_input';
-t = target';
+x = nn_input;
+t = target;
 trainFcn = train_fun;
 % Choose a Training Function
 % For a list of all training functions type: help nntrain
@@ -33,7 +33,7 @@ net.divideParam.testRatio = 15/100;
 % Test the Network
 y = net(x);
 e = gsubtract(t,y);
-performance = perform(net,t,y)
+performance = perform(net,t,y);
 
 
 % View the Network

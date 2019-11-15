@@ -50,8 +50,8 @@ for boundNoise=1.12:step:1.15
             boundNoise
             copy = spectrum * noise ;
             masterCopy(422:842,(size(matrixSpectra,2)*(j-1))+i)=copy;
-            lab1=roo2lab(100*spectrum','D65/2',wavelenght);
-            lab2=roo2lab(100*masterCopy(422:842,(size(matrixSpectra,2)*(j-1))+i)','D65/2',wavelenght);
+            lab1=roo2lab(100*spectrum','D65/2',wavelength);
+            lab2=roo2lab(100*masterCopy(422:842,(size(matrixSpectra,2)*(j-1))+i)','D65/2',wavelength);
             deltaE(1,(j-1)*size(matrixSpectra,2)+i)=de(lab1,lab2);
         end 
     end

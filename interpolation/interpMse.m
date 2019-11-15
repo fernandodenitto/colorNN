@@ -1,8 +1,12 @@
 %LA FUNZIONE PRENDE UNO SPETTRO E LO DIVIDE IN INTERVALLI CALCOLANDO PER
 %OGNI INTERVALLO LA MEDIA. SUCCESSIVAMENTE EFFETTUA L'INTERPOLAZIONE DELLO
-%SPETTRO OTTENUTO TRAMITE LE SUE MEDIE E RITORNA LO SPETTRO INTERPOLATO
+%SPETTRO OTTENUTO TRAMITE LE SUE MEDIE E CALCOLA LA BONTÀ
+%DELL'INTERPOLAZIONE METTENDO A CONFRONTO LO SPETTRO ORIGINALE E QUELLO
+%INTERPOLATO. IL RISULTATO È IL VALORE MSE DELL'INTERPOLAZIONE (LOWER IS
+%BETTER) E SE SI IMPOSTRA IL VALORE DELL'ARGOMENTRO plot A TRUE GENERA IL
+%PLOT DEI DUE SPETTRI
 
-function interpolatedSpectra=interpolateSpectraByMean(originalSpectra,wavelength,numIntervals,plot) 
+function interpMse=interpMse(originalSpectra,wavelength,numIntervals,plot) 
 
     %CREO LE ASCISSE PER POTER CREARE LO SPETTRO INTERPOLATO ED
     %EVENTUALMENTE POTER GENERARE IL PLOT, IN PARTICOLARE LE MEDIE
@@ -12,7 +16,9 @@ function interpolatedSpectra=interpolateSpectraByMean(originalSpectra,wavelength
     
     aggregatedSpectra=reduceVectorByMean(originalSpectra,numIntervals);
     interpolatedSpectra=interp1(xAgg,aggregatedSpectra,wavelength,'pchip');
-        
+    
+    interpMse=immse(interpolatedSpectra,originalSpectra'); 
+    
     if plot
         plotInterpolation(originalSpectra,interpolatedSpectra,wavelength)
     end
