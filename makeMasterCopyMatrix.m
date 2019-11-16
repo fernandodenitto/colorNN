@@ -31,8 +31,7 @@ deltaE=zeros(1,size(masterMatrix,2)*numCopy);
 
 %SETTO IL SEED PER LA FUNZIONE RANDOM CHE SARÁ IL FATTORE MOLTIPLICATIVO
 %DELLO SPETTRO MASTER PER OTTENERE LO SPETTRO COPY
-rng(11);
-
+rng(18);
 
 %PER OGNI SPETTRO MASTER CREO LA COPIA E LA IMMETTRO IN COLONNA CON LO
 %SPETTRO MASTER CORRISPONDENTE, DOPO CALCOLO LE LORO COORDINATE Lab E
@@ -45,11 +44,11 @@ for i=1:size(masterMatrix,2)
     spectrum=masterMatrix(1:421,i);
     
     for j=1:numCopy
-        noise = random ('unif ' ,1 ,1.14);
+        noise = random ('unif ' ,1 ,1.19);
         copy = spectrum * noise ;
         masterCopy(422:842,(size(masterMatrix,2)*(j-1))+i)=copy;
         lab1=roo2lab(100*spectrum','D65/2',wavelength);
-        lab2=roo2lab(100*masterCopy(422:842,(size(masterMatrix,2)*(j-1))+i)','D65/2',wavelength);
+        lab2=roo2lab(100*copy','D65/2',wavelength);
         deltaE(1,(j-1)*size(masterMatrix,2)+i)=de(lab1,lab2);
     end 
 end
@@ -69,4 +68,4 @@ for i=1:size(masterCopy,2)
     masterCopyLab(4:6,i)=roo2lab(100*masterCopy(422:842,i)','D65/2',wavelength)';
 end
 
-clear i j lab1 lab2 noise spectrum
+clear i j lab1 lab2 noise spectrum 

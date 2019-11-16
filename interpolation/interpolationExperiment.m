@@ -1,3 +1,6 @@
+addpath(genpath('../'));
+
+
 %SCRIPT PER GENERARE LA BONTA DELLE INTERPOLAZIONI
 %Lo script interpola ogni singolo spettro di colore master con lo stesso
 %suddivisi con lo stesso numero di intervalli e calcola per ognuno l'errore
@@ -23,7 +26,7 @@ for j=1:length(rangeIntervals)
     %MEDIA PER OGNI INTERVALLO
     
     for i=1:size(spectraReducted,2)
-        resultsMSE(j,i+1)=interpolateSpectraByMean(spectraReducted(:,i),wavelength,rangeIntervals(j),false); 
+        resultsMSE(j,i+1)=interpMse(spectraReducted(:,i),wavelength,rangeIntervals(j),false); 
     end
     
     %PRODUCO LA MATRICE CON LA MEDIA DEGLI ERRORI MSE PER AVERE UN ORDINE
