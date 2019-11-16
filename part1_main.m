@@ -6,11 +6,11 @@
 %   houseInputs - input data.
 %   houseTargets - target data.
  
-inputs = masterCopyFeatures(faturesExtracted,:);
+inputs = masterCopyFeatures(featuresExtracted,:);
 targets = deltaE;
  
 % Create a Fitting Network
-hiddenLayerSize = 5;
+hiddenLayerSize = 1;
 net = fitnet(hiddenLayerSize);
 
 % Set up Division of Data for Training, Validation, Testing
