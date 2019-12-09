@@ -50,7 +50,8 @@ The dataset is made up of 1269 samples of colors named "master" provided as a sp
   \label{fig:reducteddataset}
 \end{figure}
 \subsection{Copy Creation} 
-The hypothesis used for the creation of the copies is the follow one: since the reference context is an industrial process, it is difficult to have a color difference greater than 5 i.e. a $\Delta E>5$. A script (noiseInterval.m) then evaluated the noise interval that could keep the percentage of copies low with $\Delta E>5$. Starting from an absent noise i.e. with a factor of 1, noise intervals were analyzed by increasing noise factor by 0.01. Table \ref{tab:tablepercentage} shows the results. The noise factor used is 1.14 and the range therefore varies randomly in [1,1.14]. To obtain a distortion of the spectrum, and then a copy, it is chosen to multiply the spectrum by a noise factor. An example can be shown in Figure \ref{fig:mastercopy} . The generation of copies was achieved by running the script \textbf{makeMasterCopyMatrix.m} that generated a number of 10 distorted copies for each master color in a noise range ranging from [1.00,1,14].
+For the aim to create an homogeneus dataset
+The hypothesis used for the creation of the copies is the follow one: since the reference context is an industrial process, it is difficult to have a color difference greater than 5 i.e. a $\Delta E>5$. A script (noiseInterval.m) then evaluated the noise interval that could keep the low percentage of copies with $\Delta E>5$ but not negligible (for the purpose of the creation of an homogeneous dataset). Starting from an absent noise i.e. with a factor of 1, noise intervals were analyzed by increasing noise factor by 0.01. Table \ref{tab:tablepercentage} shows the results. The noise factor used is 1.18 and the range therefore varies randomly in [1,1.18]. To obtain a distortion of the spectrum, and then a copy, it is chosen to multiply the spectrum by a noise factor. An example can be shown in Figure \ref{fig:mastercopy} . The generation of copies was achieved by running the script \textbf{makeMasterCopyMatrix.m} that generated a number of 10 distorted copies for each master color in a noise range ranging from [1.00,1,18].
 \begin{table}[h!]
   \begin{center}
     \label{tab:tablepercentage}
@@ -61,6 +62,10 @@ The hypothesis used for the creation of the copies is the follow one: since the 
       $[1;1.13]$ & 0.23 &	0.27 &	0.37 &	0.13 & 	0\\
       $[1;1.14]$ & 0.25 & 0.24 & 	0.33 &	0.18 &	0.001\\
       $[1;1.15]$ & 0.21 &	0.23 &	0.34 &	0.21 &	0.01\\
+      $[1;1.16]$ & 0.21 &	0.21 &	0.31 &	0.24 &	0.03\\
+      $[1;1.17]$ & 0.20 &	0.20 &	0.30 &	0.24 &	0.06\\
+      $[1;1.18]$ & 0.19 &	0.18 &	0.28 &	0.25 &	0.10\\
+      $[1;1.19]$ & 0.17 &	0.18 &	0.26 &	0.26 &	0.13\\
     \end{tabular}
     \caption{Percentage of Value in an interval of noise factors}
   \end{center}
@@ -77,14 +82,18 @@ The hypothesis used for the creation of the copies is the follow one: since the 
 
 
 \subsection{Feature Extraction} 
-Before extracting spectra-related features, input reduction work was carried out for the neural network. The basic idea is to divide the spectra into intervals and calculate for each range the features to be proposed as input to the network. The characteristics of each range were chosen from the standard statistical features: \textbf{Mean, Median, Maximum, Minimum, Variance and Standard Deviation}.Since the mathematical \textbf{standard deviation} is the square root of the variance it was decided not to insert it in the characteristics since for the network it could be a redundant information (there is a very strong correlation about the two features). The choice of the number of intervals was made according to the following criterion: the spectrum is divided into intervals and the average is calculated for each interval. The new spectrum will have a number of values equal to the number of intervals. The new spectrum is interpolated (with a cubic interpolation) using the \textbf{interp1()} function of the Curve Fitting Toolbox and calculates how much interpolation differs from the original spectrum by the imse() function that calculates the mean squared error. If the value is very close to 0 then the interpolation represents a good approximation of the original function. In addition, the interval division also reduces the noise of the original spectra as shown in figure \ref{fig:interpolation} . After many experiments, the number of intervals chosen is 10 as the value of the average quadratic error settles into an order of magnitude ranging from 10\textsuperscript{-4} to 10\textsuperscript{-5}.
+Since the inputs of the neural network are represented by the 421 components of the master spectrum and 421 of the copy spectrum, a reduction in the number of inputs is necessary since 842 inputs are too much. The basic idea adopted in this project is to divide the spectra into intervals and calculate for each range the features to be proposed as input to the network. The first features chosen for each range were the standard statistical indexes: \textbf{Mean, Median, Maximum, Minimum, Variance and Standard Deviation} as shown in Figure \ref{fig:features}.Since the mathematical \textbf{standard deviation} is the square root of the variance it was decided not to insert it in the characteristics since for the network it could be a redundant information (there is a very strong correlation about the two features). After many experiments with statistical indexes the number of inputs has been reduced considerably with good performance. For example with a number of 10 intervals the inputs go from 842 to 120 with an 86\% gain in terms of number of inputs. After this process, through the feature selection phase it is possible to optimize this gain even more. However, this approach has been discarded since it is possible to do even better with the following one.
+If you take into consideration the only average of each interval, you can reconstruct the original spectrum and also remove the noise (as shown in Figure \ref{fig:interpolation}). \\
+\textbf{In practice we tried to understand if the only averages are sufficient to characterize the entire original spectrum.}
+The first question to answer is what is the number of intervals.
+The choice of the number of intervals was made according to the following criterion: the spectrum is divided into intervals and the average is calculated for each interval. The new spectrum will have a number of values equal to the number of intervals. The new spectrum is interpolated (with a cubic interpolation) using the \textbf{interp1()} function of the Curve Fitting Toolbox and calculates how much interpolation differs from the original spectrum by the imse() function that calculates the mean squared error. If the value is very close to 0 then the interpolation represents a good approximation of the original function. In addition, the interval division also reduces the noise of the original spectra as shown in figure \ref{fig:interpolation} . After many experiments, the number of intervals chosen is 15 as the value of the average quadratic error settles into an order of magnitude ranging from 10\textsuperscript{-4} to 10\textsuperscript{-5} that is a very good result.
+
 \begin{figure}[!h]
 \center
   \includegraphics[width=300pt]{img/interpolation.jpg}
   \caption{Master Color and Interpolation}
   \label{fig:interpolation}
 \end{figure}
-For each interval it is possible to calculate the 6 statistic features above. In this way each interval will be characterized and described by its features. At the end of the process of extraction every spectra will be reducted from 421 values to 50 values so at the end, the number of input is reducted from 842 (421 for the master's spectra, 421 for the copy's spectra) to 100 (50 for the master's spectra, 50 for the copy's spectra) with an improvement of 88\% in terms of input numbers. Furthermore the number of inputs will be reduct in the phase of features selection. It is possible to see the main features of a spectra in figure \ref{fig:features}. 
 
 \begin{figure}[!h]
 \center
@@ -92,13 +101,48 @@ For each interval it is possible to calculate the 6 statistic features above. In
   \caption{Features extracted from a spectra}
   \label{fig:features}
 \end{figure}
- 
 
 \subsection{Feature Selection} 
-After extracting the characteristics for each interval, it is possible to further decrease the number of inputs by selecting the characteristics. This selection was made through the selectionfs function. After numerous experiments, a correct tradeoff was chosen for the number of features extracted equal to 6. The stop criterion of the function was the performance of the neural network used for the selection of the characteristics and that is the mse. After many iterations and experiments the final columns included at the end are almost the same:  4 23 28 54 71 78. In this way the number of inputs are reducted from 100 to 6.
+After extracting the characteristics for each interval, it is possible to further decrease the number of inputs by selecting the characteristics. This selection was made through the selectionfs function. After numerous experiments, a correct tradeoff was chosen for the number of features extracted equal to 6. The stop criterion of the function was the performance of the neural network used for the selection of the characteristics and that is the mse. After many iterations and experiments the final columns included at the end are almost the same:  [ 1 7 16 22 ]. \textbf{In this way the number of inputs are reducted from 30 to 4}. 
  
 \subsection{Setting the Neural Network} 
-The dataset is made up of 1269 samples of colors named "master" provided as a spectrum vector at a wavelength of 380nm to 800nm, the wavelenght of visible light. From these masters, distorted copies will need to be generated and then calculate the difference between the original colors and the copies as.
+At this point in the project it is possible to use the inputs and targets as input of a shallow neural network for function fitting.
+The choice of the implementation of the neural network is performed by creating a MATLAB network using the \textbf{fitnet()} function with a number of neurons equal to n and calculating the performance:
+\begin{verbatim}
+	hiddenLayerSize=n 
+	net=fitnet(hiddenLayerSize);
+	net.divideParam.trainRatio=70/100;
+	net.divideParam.valRatio=15/100; 
+	net.divideParam.testRatio=15/100; 
+	net=train(net,inputs,targets);
+\end{verbatim}
+The performances are calculated starting from a number of hidden neurons equal to 1 and increasing it. This is done 10 times and network performance in terms of \textit{mean squared error} and \textit{training time} are calculated.The results of the experiment are shown in the following Table \ref{tab:tablefitnn}.From the results of the experiments it is possible to see that a good trade-off for the choice of the number of hidden neurons is represented by n = 4. 
+\begin{table}[h!]
+  \begin{center}
+    \label{tab:tablefitnn}
+    \begin{tabular}{c|c|c|c|c|c} 
+      \textbf{No. Hidden Neurons} & \textbf{mse}&\textbf{Training Time}\\
+       \hline
+     1 	 &0.15	&0.30\\
+     2	 &0.03&	0.98\\
+     3	 &0.027	 &0.66\\
+     4	 &0.010	 &0.72\\
+     5	 &0.010& 1.3\\
+    \end{tabular}
+    \caption{Performances evaluated in Neural Network's Training}
+  \end{center}
+\end{table}
+The randomness of the experiment repetitions is introduced by the 'dividerand' option of the MATLAB neural network toolbox. In this way the training, testing and validation sets are represented by different elements for each iteration. In general the choice of a greater number of hidden neurons involves more time for the traning and more samples are required. Having a greater number of neurons also results in a better fit and a better regression coefficient.
+Adopting the results of the experiments and the choices made above the final network has a \textbf{regression coefficient equal to 0.9982 and an mse equal to 0.0103}. The value of the regression coefficient very close to 1 confirms that the fitting of the function is very good as show in figure \ref{fig:regression}.
+
+\begin{figure}[!h]
+\center
+  \includegraphics[width=300pt]{img/regression.jpg}
+  \caption{Regression Plot of the Final Neural Network}
+  \label{fig:regression}
+\end{figure}
+
+
 \end{document}
 
 

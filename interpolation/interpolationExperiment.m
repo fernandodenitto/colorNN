@@ -39,7 +39,7 @@ for j=1:length(rangeIntervals)
     
 end
 
-
+clear i j rangeIntervals resultsMSE matrix  
 
 
 

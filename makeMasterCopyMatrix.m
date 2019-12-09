@@ -4,7 +4,7 @@
 % caricato il dataset altrimenti non trova le variabili
 
 numCopy=10;
-masterMatrix=spectraReducted;
+masterMatrix=spectra;
 numSamples=size(masterMatrix,2);
 
 
@@ -68,4 +68,4 @@ for i=1:size(masterCopy,2)
     masterCopyLab(4:6,i)=roo2lab(100*masterCopy(422:842,i)','D65/2',wavelength)';
 end
 
-clear i j lab1 lab2 noise spectrum 
+clear i j lab1 lab2 noise spectrum copy

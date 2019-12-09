@@ -1,39 +1,57 @@
-%Features che si vogliono estrarre
-numFeaturesToExtract=4;
+%SCRIPT PER GENERARE LA MATRICE MASTER COPY DELLE CARATTERISTICHE CON SOLO
+%LE MEDIE
 
-%Matrice che viene riempita con le features estratte per ogni iterazione
-%dove la riga i-esima contiene le features estratte nell'iterazione i-esima
-%(ricordare però che nella matrice MasterCopy queste features rappresentano
-%le righe in quanto le colonne sono gli spettri di colori
-featuresExtractedMatrix=[];
 
-numMaxIterations=8; %Settare a piacimento per esperimenti
+%Creo la matrice MasterCopy con le Features questa volta disposte per righe
+%visto che la dovro' passare alla sequentialfs 
 
-for i=1:8
+numFeatures=1; %Prendo solo la media degli intervalli
+numInterval=15;
 
-x=masterCopyFeatures';
-t=deltaE';
-opt=statset('display','iter');
-[fs,history]=sequentialfs(@criterionNN,x,t,'cv','none','opt', opt,'nfeatures', numFeaturesToExtract);
+masterCopyFeatures=zeros(numInterval*2,size(masterCopy,2));
 
-featuresExtractedMatrix=[featuresExtractedMatrix; find(fs>0)]
-
+for i=1:size(masterCopy,2)
+   masterFeatures=reduceVectorByMean(masterCopy(1:421,i),numInterval);
+   copyFeatures=reduceVectorByMean(masterCopy(422:842,i),numInterval);
+   
+   masterCopyFeatures(1:numFeatures*numInterval,i)=masterFeatures';
+   masterCopyFeatures(numFeatures*numInterval+1:2*numFeatures*numInterval,i)=copyFeatures';
+   
 end
 
-%vettore che rappresenta le 4 features più estratte calcolate per righe
-featuresExtracted=mode(featuresExtractedMatrix,1);
+clear numFeatures numInterval i masterFeatures masterMatrix
 
-clear numMaxIterations x t opt fs history featuresExtractedMatrix
+%masterCopyFeatures=zscore(masterCopyFeatures); %normalizzo
 
-function perf = criterionNN(x,t)
-%create a network
-hiddenLayerSize=3;
-net=fitnet(hiddenLayerSize);
-xx=x'; tt=t';
-% train the network
-[net,tr]=train(net,xx,tt);
-% test the network
-y=net(xx);
-perf=perform(net,tt,y);
+%%%%%%  FUNZIONE PER PRODURRE IL VETTORE DELLE CARATTERISTICHE  %%%%%%%%%%%
+
+%QUESTA FUNZIONE PRENDE UN VETTORE V ED UN NUMERO DI INTERVALLI N COME
+%ARGOMENTI. DIVIDE IN VETTORE IN N INTERVALLI E PER OGNI INTERVALLO CALCOLA
+%LA MEDIA. IL VETTORE RISULTANTE AVRA'UNA DIMENSIONE PARI AD N CIOÈ LA
+%MEDIA
+
+
+function aggregatedVector = reduceVectorByMean(vector,numIntervals)
+
+numFeatures=1; %il numero di caratteristiche e' 1 cioé la media
+aggregatedVector=zeros(1,numIntervals*numFeatures);
+size=length(vector);
+
+intervalSize=round(size/numIntervals);
+
+    for i=1:numIntervals   
+
+        indexVector=(i-1)*(intervalSize)+1;
+        indexAggVector=(i-1)*(numFeatures)+1;
+
+        if (i==numIntervals)
+        %se e' l'ultimo intervallo devo prendere anche i valori finali
+        aggregatedVector(indexAggVector)=mean(vector(indexVector:length(vector))); %mean
+        else           
+        aggregatedVector(indexAggVector)=mean(vector(indexVector:indexVector+(intervalSize-1))); %mean
+        end
+    end 
+      
+
 end
 
