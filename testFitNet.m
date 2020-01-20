@@ -1,7 +1,8 @@
 maxHiddenNeurons=5;
 numRipetizioni=10;
+featureSelected=[1 7 16 22];
 
-masterCopyFeaturesSel=masterCopyFeatures([1 7 16 22],:);
+masterCopyFeaturesSel=masterCopyFeatures(featureSelected,:);
 
 % Nella tabella riepilogativa nella prima colonna ci saranno scritti il
 % numero di neuroni con il quale facciamo il training della rete. Le altre

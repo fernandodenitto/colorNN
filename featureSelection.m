@@ -9,7 +9,7 @@ featuresSelectedMatrix=[];
 
 numMaxIterations=8; %Settare a piacimento per esperimenti
 
-for i=1:8
+for i=1:numMaxIterations
 
 x=masterCopyFeatures';
 t=deltaE';

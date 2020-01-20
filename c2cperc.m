@@ -1,0 +1,6 @@
+% FUNZIONE PER CONVERTIRE LA COORDINATA C IN TERMINI PERCENTUALI USANDO LA
+% RELAZIONE DELL'ELLISSE SULLE COORDINATE Lch
+function c_perc = c2cperc(L,C)
+        C_max = sqrt((1-((L- 50)/50)^2))*127;
+        c_perc = (C/C_max)*100;
+end

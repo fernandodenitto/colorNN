@@ -1,17 +1,20 @@
 %------------       DATA PRE-PROCESSING        --------------%
 
+disp("Making the Final Dataset...")
 makeFinalDataset
+disp("Final Dataset CREATED")
+
+disp("Creating the copies...")
 makeMasterCopyMatrix
+disp("Matrix masterCopy CREATED!")
 
 %------------  FEATURES EXTRACTION & SELECTION --------------%
-
+disp("Feature Extraction Phase")
 featureExtraction
 %makeMasterCopyFeatures
 
 %Per saltare il processo di featureSelection
-
-%featuresSelected=[1 23 24 51 73 74];
-
+disp("Feature Selection Phase")
 featuresSelected=[1  7 16  22];
 %featureSelection
 
@@ -25,11 +28,14 @@ featuresSelected=[1  7 16  22];
 %   houseInputs - input data.
 %   houseTargets - target data.
  
+
+disp("Training the Neural Network")
+
 inputs = masterCopyFeatures(featuresSelected,:);
 targets = deltaE;
  
 % Create a Fitting Network
-hiddenLayerSize = 4;
+hiddenLayerSize = 2;
 net = fitnet(hiddenLayerSize);
 
 % Set up Division of Data for Training, Validation, Testing
@@ -45,7 +51,8 @@ outputs = net(inputs);
 errors = gsubtract(outputs,targets);
 performance = perform(net,targets,outputs)
 regres = regression(targets,outputs)
- 
+disp("Neural Network Trained!")
+
 % View the Network
 view(net)
  

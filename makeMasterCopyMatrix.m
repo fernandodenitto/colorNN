@@ -3,7 +3,7 @@
 % varibili globali definite all'inizio e bisogna chiamarlo una volta
 % caricato il dataset altrimenti non trova le variabili
 
-numCopy=10;
+numCopy=5;
 masterMatrix=spectra;
 numSamples=size(masterMatrix,2);
 
